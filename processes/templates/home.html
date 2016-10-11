@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>Hello!</h2>
+    <p id="message"></p>
+    <script type="text/javascript">
+      // Note that the path doesn't matter right now; any WebSocket
+      // connection gets bumped over to WebSocket consumers
+      socket = new WebSocket("ws://" + window.location.host + "/chat/");
+      var elem = document.getElementById("message");
+
+      socket.onmessage = function(e) {
+        elem.innerHTML = e.data;
+      }
+
+      socket.onopen = function() {
+        socket.send("process completed!");
+      }
+
+      // Call onopen directly if socket is already open
+      if (socket.readyState == WebSocket.OPEN) socket.onopen();
+    </script>
+  </body>
+</html>
