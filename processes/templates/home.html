@@ -5,7 +5,12 @@
     <title></title>
   </head>
   <body>
-    <h2>Hello!</h2>
+    {% if request.user.is_authenticated %}
+      <h2>Hello, {{request.user.username}}!</h2>
+    {% else %}
+      <p><i>You'll probably need to log in to get messages...</i></p>
+    {% endif %}
+
     <p id="message"></p>
     <script type="text/javascript">
       // Note that the path doesn't matter right now; any WebSocket

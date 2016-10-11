@@ -1,17 +1,24 @@
-from channels import Group
-
+from channels import Channel, Group
+from channels.sessions import channel_session
+from channels.auth import http_session_user, channel_session_user, channel_session_user_from_http
 
 # Connected to websocket.connect
+@channel_session_user_from_http
 def ws_add(message):
+    # Accept connection
     message.reply_channel.send({"accept": True})
-    Group("chat").add(message.reply_channel)
+
+    # Add them to the right group
+    Group("chat-%s" % message.user.id).add(message.reply_channel)
 
 # Connected to websocket.receive
+@channel_session_user
 def ws_message(message):
-    Group("chat").send({
-        "text": "[user] %s" % message.content['text'],
+    Group("chat-%s" % message.user.id).send({
+        "text": message['text'],
     })
 
 # Connected to websocket.disconnect
+@channel_session_user
 def ws_disconnect(message):
-    Group("chat").discard(message.reply_channel)
+    Group("chat-%s" % message.user.id).discard(message.reply_channel)
