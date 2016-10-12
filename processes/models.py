@@ -20,7 +20,7 @@ def send_message(sender, instance, **kwargs):
     """
     after the process instance is saved, send a message to its user
     """
-    print('sending message... ')
-    Group("chat").send({
-        "text": "process was saved!",
-    })
+    if instance.complete:
+        Group("chat-%s" % instance.user.id).send({
+            "text": "%s is complete!" % instance.name,
+        })

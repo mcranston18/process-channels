@@ -11,16 +11,9 @@ def ws_add(message):
     message.reply_channel.send({"accept": True})
 
     # Add them to the right group
-    Group("chat").add(message.reply_channel)
-
-# Connected to websocket.receive
-@channel_session_user
-def ws_message(message):
-    Group("chat").send({
-        "text": message['text'],
-    })
+    Group("chat-%s" % message.user.id).add(message.reply_channel)
 
 # Connected to websocket.disconnect
 @channel_session_user
 def ws_disconnect(message):
-    Group("chat").discard(message.reply_channel)
+    Group("chat-%s" % message.user.id).discard(message.reply_channel)
